@@ -1,4 +1,4 @@
-# rusty-reflector
+# reflector-duo
 Basic CosmWasm (v0.15) Smart Contracts - Demonstrates sending messages from one smart contract to another
 
 Contains two subfolders:
