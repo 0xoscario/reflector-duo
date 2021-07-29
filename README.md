@@ -6,15 +6,17 @@ Contains two subfolders:
 - incrementor: Smart Contract that acts as a 'reflectee' and recieves reflected messages for execution from the 'reflector'
 
 ## Testing with LocalTerra (main), using terrad (version 0.5.0-rc0-9)
-1.Store and Instantiate the reflector contract:
+1.Store and Instantiate the reflector contract & note the `contract_address` for both:
   - Store: `terrad tx wasm store ./artifacts/reflector.wasm --from test1 --chain-id=localterra --gas=auto --fees=100000uluna --broadcast-mode=block`
   - Instantiate: `terrad tx wasm instantiate <code_id> '{}' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block`
 2. Store and Instantiate the incrementor contract with a starting count of 42:
   - Store: `terrad tx wasm store ./artifacts/incrementor.wasm --from test1 --chain-id=localterra --gas=auto --fees=100000uluna --broadcast-mode=block`
-  - Instantiate: `terrad tx wasm instantiate <code_id> '{ "count": 42 }' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block`
+  - Instantiate: `terrad tx wasm instantiate <code_id> '{"count":42}' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block`
 3. Set the reflectee address in the reflector contract's state:
-  - `terrad tx wasm execute <reflector_contract_addr> `
-4. Using the refector's 'Reflect { msgs: Vec<SubMsg>}', send an 'Increment {}' execute message to the reflectee contract
-  - `terrad tx wasm execute <reflector_contract_addr> `
-5. Send an 'GetCount {}' query message to the reflectee contract to check that the reflector forwarding worked
-  - `terrad tx wasm execute <reflectee_contract_addr> `
+  - `terrad tx wasm execute <reflector_contract_addr> '{ "set_reflectee": { "reflectee": "<incrementor_contract_addr>" } }' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block`
+4. Check that the reflector contract's state was updated correctly by querying it
+  - `terrad query wasm contract-store <reflector_contract_addr> '{"get_info":{}}'`
+5. Using the refector's 'Reflect { msgs: Vec<SubMsg> }', send an 'Increment {}' execute message to the reflectee contract
+  - `terrad tx wasm execute <reflector_contract_addr> '{"reflect":{"msgs":[<SubMsg>]}}' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block`
+6. Send an 'GetCount {}' query message to the incrementor contract to check that the reflector forwarding worked
+  - `terrad query wasm contract-store <incrementor_contract_addr> '{"get_count":{}}'`
