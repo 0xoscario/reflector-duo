@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StateInfoResponse",
+  "type": "object",
+  "required": [
+    "owner",
+    "reflectee"
+  ],
+  "properties": {
+    "owner": {
+      "type": "string"
+    },
+    "reflectee": {
+      "type": "string"
+    }
+  }
+}
