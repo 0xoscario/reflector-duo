@@ -10,6 +10,7 @@ pub struct InstantiateMsg {}
 pub enum ExecuteMsg {
     SetReflectee { reflectee: String },
     Reflect { msgs: Vec<SubMsg> },
+    SendIncrementToReflectee {},
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
