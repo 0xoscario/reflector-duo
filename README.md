@@ -20,3 +20,5 @@ Contains two subfolders:
   - `terrad tx wasm execute <reflector_contract_addr> '{"reflect":{"msgs":[<SubMsg>]}}' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block`
 6. Send an 'GetCount {}' query message to the incrementor contract to check that the reflector forwarding worked
   - `terrad query wasm contract-store <incrementor_contract_addr> '{"get_count":{}}'`
+7. Using the reflector contract you can increment the incrementor
+  - `terrad tx wasm execute <reflector_contract_addr> '{ "send_increment_to_reflectee": {} }' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block`

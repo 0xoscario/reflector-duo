@@ -1,6 +1,6 @@
 use cosmwasm_std::{
     attr, entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
-    SubMsg,
+    SubMsg, WasmMsg,
 };
 
 use crate::error::ContractError;
@@ -36,6 +36,7 @@ pub fn execute(
     match msg {
         ExecuteMsg::SetReflectee { reflectee } => try_set_reflectee(deps, info, reflectee),
         ExecuteMsg::Reflect { msgs } => try_reflect(deps, info, msgs),
+        ExecuteMsg::SendIncrementToReflectee {} => try_to_send_increment_to_reflectee(deps, info),
     }
 }
 
@@ -81,6 +82,32 @@ pub fn try_reflect(
     let res = Response {
         messages: msgs,
         attributes: vec![attr("action", "reflect")],
+        ..Response::default()
+    };
+    Ok(res)
+}
+
+pub fn try_to_send_increment_to_reflectee(
+    deps: DepsMut,
+    info: MessageInfo,
+) -> Result<Response, ContractError> {
+    // load STATE
+    let state = STATE.load(deps.storage)?;
+    // Check that sender is the owner
+    if info.sender != state.owner {
+        return Err(ContractError::Unauthorized {});
+    }
+
+    let sub_msg = SubMsg::new(WasmMsg::Execute {
+        contract_addr: state.reflectee.to_string(),
+        msg: Binary::from_base64("eyJpbmNyZW1lbnQiOnt9fQ==").unwrap(),
+        funds: vec![],
+    });
+
+    // send the passed messages on to be executed on the reflectee SC address
+    let res = Response {
+        messages: vec![sub_msg],
+        attributes: vec![attr("action", "send_increment_to_reflectee")],
         ..Response::default()
     };
     Ok(res)
@@ -194,9 +221,7 @@ mod tests {
 
         // proper messages, sent by the owner can be Reflected to the reflectee
         let info = mock_info(owner.as_ref(), &coins(20, "luna"));
-        let msg = ExecuteMsg::Reflect {
-            msgs: vec![],
-        };
+        let msg = ExecuteMsg::Reflect { msgs: vec![] };
         let res = execute(deps.as_mut(), mock_env(), info, msg).unwrap();
         assert_eq!(0, res.messages.len());
     }

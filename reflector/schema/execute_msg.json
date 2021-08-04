@@ -44,6 +44,18 @@
         }
       },
       "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "send_increment_to_reflectee"
+      ],
+      "properties": {
+        "send_increment_to_reflectee": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
     }
   ],
   "definitions": {

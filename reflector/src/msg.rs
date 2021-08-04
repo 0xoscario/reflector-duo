@@ -1,6 +1,6 @@
+use cosmwasm_std::SubMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::SubMsg;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {}
@@ -10,6 +10,7 @@ pub struct InstantiateMsg {}
 pub enum ExecuteMsg {
     SetReflectee { reflectee: String },
     Reflect { msgs: Vec<SubMsg> },
+    SendIncrementToReflectee {},
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
