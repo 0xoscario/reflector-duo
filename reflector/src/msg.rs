@@ -1,6 +1,6 @@
+use cosmwasm_std::SubMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::SubMsg;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {}

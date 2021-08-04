@@ -1,5 +1,6 @@
-use cosmwasm_std::{Binary, CosmosMsg, Deps, DepsMut, Env, MessageInfo, ReplyOn,
-    Response, StdResult, SubMsg, WasmMsg, attr, coins, entry_point, to_binary,
+use cosmwasm_std::{
+    attr, entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
+    SubMsg, WasmMsg,
 };
 
 use crate::error::ContractError;
@@ -220,9 +221,7 @@ mod tests {
 
         // proper messages, sent by the owner can be Reflected to the reflectee
         let info = mock_info(owner.as_ref(), &coins(20, "luna"));
-        let msg = ExecuteMsg::Reflect {
-            msgs: vec![],
-        };
+        let msg = ExecuteMsg::Reflect { msgs: vec![] };
         let res = execute(deps.as_mut(), mock_env(), info, msg).unwrap();
         assert_eq!(0, res.messages.len());
     }

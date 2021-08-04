@@ -3,7 +3,7 @@ use std::fs::create_dir_all;
 
 use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
 
-use reflector::msg::{StateInfoResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+use reflector::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, StateInfoResponse};
 use reflector::state::State;
 
 fn main() {
